@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy eBook</title>
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
+</head>
+<body>
+    <h2>Buy My eBook</h2>
+    <input type="email" id="customer-email" placeholder="Enter your email" required>
+    <div id="paypal-button-container"></div>
+
+    <script>
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: { value: "2.99" } 
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    let email = document.getElementById("customer-email").value;
+                    if (!email) {
+                        alert("Please enter your email!");
+                        return;
+                    }
+                    fetch('/verify-payment', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            paypal_order_id: details.id,
+                            email: email
+                        })
+                    }).then(res => res.json()).then(data => {
+                        if (data.success) {
+                            alert("Payment successful! Check your email for the eBook.");
+                        } else {
+                            alert("Payment verification failed!");
+                        }
+                    });
+                });
+            }
+        }).render('#paypal-button-container');
+    </script>
+</body>
+</html>
