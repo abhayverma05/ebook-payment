@@ -65,4 +65,22 @@ if __name__ == '__main__':
     import os
 port = int(os.environ.get("PORT", 5000))  # Use Render's PORT
 app.run(host="0.0.0.0", port=port, debug=True)
+from flask import Flask, request, render_template
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+@app.route("/buy", methods=["POST"])
+def buy():
+    email = request.form.get("email")
+    if email:
+        return f"Payment process started for {email}"  # Placeholder message
+    return "Error: Email not provided"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
+
 
