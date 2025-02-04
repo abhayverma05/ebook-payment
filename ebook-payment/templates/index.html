@@ -8,6 +8,13 @@
 </head>
 <body>
     <h2>Buy My eBook</h2>
+    
+    <form action="/buy" method="POST"> 
+        <label for="email">Enter your email:</label>
+        <input type="email" id="email" name="email" required>
+        <button type="submit">Buy Now</button>  <!-- Button added -->
+    </form>
+    
     <input type="email" id="customer-email" placeholder="Enter your email" required>
     <div id="paypal-button-container"></div>
 
